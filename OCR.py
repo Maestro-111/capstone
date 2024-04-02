@@ -158,12 +158,18 @@ def text_extraction(text):
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
 
-    message = f"Given the following text extracted from receipt message: {text} , I want you to retrieve information in the strictly in the following format:" \
-              f"total amount: derived total amount from the text" \
-              f"subtotal amount: derived subtotal amount from the text" \
-              f"Name of Store: derived Name of Store from the text" \
-              f"Payment type: derived Payment type from the text" \
-              f"List of the products found the in receipt, like this - list of products: product#1,product#2,product#3 and so on. make sure that the product list (products: product#1,product#2,product#3) is in one line"
+
+    #For example, if you have not found total amount, the response should be total amount:None.
+
+    message = f"Given the following text extracted from receipt message: {text}, I want you to retrieve information in the strictly following format: " \
+              f"total amount: derived total amount from the text." \
+              f" subtotal amount: derived subtotal amount from the text." \
+              f" Name of Store: derived Name of Store from the text." \
+              f" Payment type: derived Payment type from the text." \
+              f" Receipt Date: when the receipt was processed." \
+              f" Location: The location where receipt was handled." \
+              f" List of the products found the in receipt, like this - list of products: product#1,product#2,product#3 and so on. make sure that the product list (products: product#1,product#2,product#3) is in one line. " \
+              f"Finally, for any of the queries above the value should be None if you have not found specified object in the provided text. "
 
     chat_completion = client.chat.completions.create(
         messages=[
@@ -176,9 +182,9 @@ def text_extraction(text):
     )
 
     resp = chat_completion.choices[0].message.content
-    #print(resp)
     resp = resp.split('\n')
-    #(resp)
+
+    #print(resp)
 
     resp = [i for i in resp if i]
 
@@ -187,7 +193,9 @@ def text_extraction(text):
     subtotal = None
     name_of_store = None
     pay_type = None
-    products = []
+    date = None # 4
+    address = None # 5
+    products = [] # 6
     dumb_names = []
 
     for i in range(len(resp)):
@@ -206,6 +214,10 @@ def text_extraction(text):
             name_of_store = value
         elif i == 3:
             pay_type = value
+        elif i == 4:
+            date = value
+        elif i == 5:
+            address = value
         else:
             value = value.split(',')
 
@@ -218,7 +230,7 @@ def text_extraction(text):
 
             products = value
 
-    data1 = {'total': [total], 'subtotal': [subtotal], 'store': [name_of_store], 'payment type': [pay_type]}
+    data1 = {'total': [total], 'subtotal': [subtotal], 'store': [name_of_store], 'payment type': [pay_type], 'date':[date],'address':[address]}
 
     data2 = {'product_count':dumb_names, 'product_name':products}
 
