@@ -35,114 +35,7 @@ def remove_contours_inside(contours):
 
     return filtered_contours
 
-def write_list_of_lists_to_file(list_of_lists, file_name):
-    with open(file_name, 'w') as f:
-        for inner_list in list_of_lists:
-            f.write(' '.join(map(str, inner_list)) + '\n')
 
-def run_OCR_analysis(image_path):
-
-    image = cv2.imread(image_path)
-
-    plt.imshow(image)
-    plt.show()
-
-    k = 3
-    threshold_percentage = 0.8
-    threshold_value = 160
-
-
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    for i in range(len(gray)):
-        for j in range(len(gray[0])):
-            if gray[i][j] < threshold_value:
-                gray[i][j] = 0
-
-    plt.imshow(gray)
-    plt.show()
-
-    for i in range(len(gray)):
-        for j in range(len(gray[0])):
-
-            if gray[i][j] != 0:
-
-                vert_pos_n = []
-                vert_neg_n = []
-                horizont_neg_j = []
-                horizont_pos_j = []
-
-                copy_i = i
-                count = 0
-                while copy_i + 1 < len(gray) and count < k:
-                    vert_pos_n.append(gray[copy_i + 1][j])
-                    copy_i += 1
-                    count += 1
-
-                copy_i = i
-                count = 0
-                while copy_i - 1 >= 0 and count < k:
-                    vert_pos_n.append(gray[copy_i - 1][j])
-                    copy_i -= 1
-                    count += 1
-
-                copy_j = j
-                count = 0
-                while copy_j + 1 < len(gray[0]) and count < k:
-                    horizont_pos_j.append(gray[i][copy_j + 1])
-                    copy_j += 1
-                    count += 1
-
-                copy_j = j
-                count = 0
-                while copy_j - 1 >= 0 and count < k:
-                    horizont_neg_j.append(gray[i][copy_j - 1])
-                    copy_j -= 1
-                    count += 1
-
-                # Count zeros in neighbors
-                zero_count = sum(pixel == 0 for pixel in vert_pos_n + vert_neg_n + horizont_neg_j + horizont_pos_j)
-
-                # Check if 80% or more of the neighbors are zero
-                if zero_count >= threshold_percentage * len(vert_pos_n + vert_neg_n + horizont_neg_j + horizont_pos_j):
-                    gray[i][j] = 0
-
-
-    write_list_of_lists_to_file(gray,'coords.txt')
-
-    edged = cv2.Canny(gray, 40, 250)
-
-    plt.imshow(edged)
-    plt.show()
-
-    cnts, hierarchy = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = remove_contours_inside(cnts)
-
-    points = []
-    for cnt in cnts:
-        points += [pt[0] for pt in cnt]
-
-    points_array = np.array(points).reshape(-1, 1, 2)
-    hull = cv2.convexHull(points_array)
-
-    hull_cnts = cv2.drawContours(image.copy(), [hull], -1, (0, 255, 0), 3)
-    plt.imshow(hull_cnts)
-    plt.show()
-
-    x, y, w, h = cv2.boundingRect(hull)
-
-    roi = image[y:y + h, x:x + w]
-
-    new_width = 3 * roi.shape[1]  # Increase width by a factor of 2
-    new_height = 3 * roi.shape[0]  # Increase height by a factor of 2
-    resized_roi = cv2.resize(roi, (new_width, new_height))
-
-    plt.imshow(resized_roi)
-    plt.show()
-
-    custom_config = r'--psm 4'
-    text = pytesseract.image_to_string(resized_roi, config=custom_config)
-    return text
 
 def run_craft():
     anaconda_python_path = r'C:/Python39/python.exe'
@@ -151,25 +44,15 @@ def run_craft():
 
 def text_extraction(text):
 
-    #print(text)
-
     client = OpenAI(
         # This is the default and can be omitted
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
 
+    with open('prompt.txt', 'r') as file:
+        message_template = file.read()
 
-    #For example, if you have not found total amount, the response should be total amount:None.
-
-    message = f"Given the following text extracted from receipt message: {text}, I want you to retrieve information in the strictly following format: " \
-              f"total amount: derived total amount from the text." \
-              f" subtotal amount: derived subtotal amount from the text." \
-              f" Name of Store: derived Name of Store from the text." \
-              f" Payment type: derived Payment type from the text." \
-              f" Receipt Date: when the receipt was processed." \
-              f" Location: The location where receipt was handled." \
-              f" List of the products found the in receipt, like this - list of products: product#1,product#2,product#3 and so on. make sure that the product list (products: product#1,product#2,product#3) is in one line. " \
-              f"Finally, for any of the queries above the value should be None if you have not found specified object in the provided text. "
+    message = message_template.format(text)
 
     chat_completion = client.chat.completions.create(
         messages=[
@@ -183,8 +66,6 @@ def text_extraction(text):
 
     resp = chat_completion.choices[0].message.content
     resp = resp.split('\n')
-
-    #print(resp)
 
     resp = [i for i in resp if i]
 

@@ -2,7 +2,6 @@
 *.swp
 *.pkl
 *.pth
-*.xlsx
 *.csv
 venv 
 __pycache__ 

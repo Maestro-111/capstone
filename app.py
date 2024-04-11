@@ -1,12 +1,12 @@
 from flask import Flask, flash,render_template, request, redirect, url_for, send_from_directory
 import os
-from OCR import run_OCR_analysis
 from OCR import text_extraction
 from OCR import run_craft
 import pandas as pd
 from werkzeug.utils import secure_filename
 import shutil
 from create_folders import create_folders
+from reset_exports import delete_files_in_directory
 
 
 create_folders()
@@ -42,8 +42,6 @@ def upload():
     if file.filename == '':
         return "No selected file"
 
-
-    # Save the uploaded file to the 'uploads' folder
     if file:
 
         filename = secure_filename(file.filename)
@@ -66,7 +64,6 @@ def upload():
 
         delete_files_in_directory("test")
         delete_files_in_directory('result')
-        #delete_files_in_directory("uploads")
         delete_files_in_directory('tets_boxes_from_craft/coords')
         delete_files_in_directory('tets_boxes_from_craft/imgs')
 
@@ -82,11 +79,21 @@ def upload():
 
 
         if len(txt_output):
+
             extarcted_text,product_text = text_extraction(txt_output) # dict
             general_info = pd.DataFrame(extarcted_text)
             product_info = pd.DataFrame(product_text)
 
-            output_path = os.path.join(base_path, 'output.xlsx')
+            print(filename_original)
+
+            general_info["Image Name"] = filename_original
+
+            with open('exports/number.txt', 'r') as file:
+                number = file.read()
+
+            number = int(number)
+
+            output_path = os.path.join(base_path, f'exports/output{number}.xlsx')
 
             # Writing general_info to the Excel file
             with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
@@ -97,26 +104,14 @@ def upload():
             with pd.ExcelWriter(output_path, engine='openpyxl', mode='a') as writer:
                 product_info.to_excel(writer, sheet_name='product_info', index=False)
 
+            with open('exports/number.txt', 'w') as file:
+                file.write(f'{number+1}')
 
             return render_template('result_1.html', output_path=output_path, os=os)
+
         else:
             print(filename_original)
             return render_template('result_2.html', image_filename=filename_original)
-
-
-
-
-
-
-def delete_files_in_directory(directory_path):
-    files = os.listdir(directory_path)
-    for file_name in files:
-        file_path = os.path.join(directory_path, file_name)
-        if os.path.isfile(file_path):
-            os.remove(file_path)
-            print(f"Deleted: {file_path}")
-    print("All files deleted successfully.")
-
 
 
 if __name__ == '__main__':
