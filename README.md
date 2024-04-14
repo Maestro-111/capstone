@@ -45,5 +45,8 @@ unit testing.py merges all the outputs into one table and compares it with datab
 
 ## TO DO
 
+1. Add image data folder with sample photos
+2. Work on GPT prompt. Not accurate in identifying address.
+
 
 

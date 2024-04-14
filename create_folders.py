@@ -19,3 +19,6 @@ def create_folders():
     create_folder_if_not_exists("test")
     create_folder_if_not_exists("result")
     create_folder_if_not_exists("contours")
+
+    with open('exports/number.txt', 'w') as file:
+        file.write(f'{0}')

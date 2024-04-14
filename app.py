@@ -12,6 +12,7 @@ import shutil
 
 create_folders()
 
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads'

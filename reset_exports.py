@@ -1,6 +1,12 @@
 import os
 
 
+"""
+Run this file when you need to reset the image id for unit testing collection. 
+It will reset the image num in exports, used to label each output table, to 0
+"""
+
+
 def delete_files_in_directory(directory_path):
     files = os.listdir(directory_path)
     for file_name in files:
