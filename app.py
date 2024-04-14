@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import shutil
 from create_folders import create_folders
 from reset_exports import delete_files_in_directory
+import shutil
 
 
 create_folders()
@@ -21,7 +22,7 @@ base_path = os.path.dirname(__file__)
 
 @app.route('/')
 def index():
-    return render_template('index_1.html')
+    return render_template('index_1_1.html')
 
 
 
@@ -93,7 +94,7 @@ def upload():
 
             number = int(number)
 
-            output_path = os.path.join(base_path, f'exports/output{number}.xlsx')
+            output_path = os.path.join(base_path, f'exports/output{number}.xlsx') # whats with the path?
 
             # Writing general_info to the Excel file
             with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
@@ -107,11 +108,19 @@ def upload():
             with open('exports/number.txt', 'w') as file:
                 file.write(f'{number+1}')
 
-            return render_template('result_1.html', output_path=output_path, os=os)
+
+
+            final_path = os.path.join(base_path, 'output.xlsx')
+
+            print(final_path)
+
+            shutil.copy(output_path, final_path)
+
+            return render_template('result_1_1.html', output_path=final_path, os=os)
 
         else:
             print(filename_original)
-            return render_template('result_2.html', image_filename=filename_original)
+            return render_template('result_2_2.html', image_filename=filename_original)
 
 
 if __name__ == '__main__':
