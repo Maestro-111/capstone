@@ -6,7 +6,7 @@
 In this project the aim is to extract text information from receipts images. 
 The application is wrapped into a simple Flaks app.
 
-![Project Diagram](figure/image schema.png)
+![Project Diagram](figure/image_schema.png)
 
 
 ## Prerequisites
