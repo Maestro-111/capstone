@@ -10,7 +10,7 @@ The application is wrapped into a simple Flaks app.
 
 ## Prerequisites
 
-1. You have to install CRAFT to run the code.
+1. You have to install our Custom_CRAFT package to run the code. This is a modification of original CRAFT package.
 2. You have to establish your Open AI key to use GPT API.
 
 
@@ -29,7 +29,8 @@ The application is wrapped into a simple Flaks app.
 3. Text Analysis with LLM: GPT-4 is used to extract text information from OCR data.
    
 Links:
-- CRAFT: [Link](https://github.com/clovaai/CRAFT-pytorch)
+- Original CRAFT: [Link](https://github.com/clovaai/CRAFT-pytorch)
+- Custom CRAFT: [Link](https://github.com/Maestro-111/Custom-Craft.git)
 - EasyOCR: [Link](https://github.com/JaidedAI/EasyOCR)
 
 
