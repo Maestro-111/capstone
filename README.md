@@ -20,7 +20,8 @@ The application is wrapped into a simple Flaks app.
 2. Install the requirements from requirements.txt
 3. activate venv
 4. From terminal run flask app with flask run command.
-5. Upload any photo from image data folder to the website. 
+5. Upload any photo from sample data folder to the website. 
+6. wait and download the resulting Excel file
 
 
 ## Methodology
@@ -46,8 +47,7 @@ unit testing.py merges all the outputs into one table and compares it with datab
 
 ## TO DO
 
-1. Add image data folder with sample photos
-2. Work on GPT prompt. Not accurate in identifying address.
+1. Work on GPT prompt. Not accurate in identifying address.
 
 
 
