@@ -10,18 +10,19 @@ The application is wrapped into a simple Flaks app.
 
 ## Prerequisites
 
-1. You have to install our Custom_CRAFT package to run the code. This is a modification of original CRAFT package.
+1. You have to install our Custom_CRAFT package to run the code. This is a modification of original CRAFT package. Note that you have to install Python 3.9 or lower to run CRAFT.
 2. You have to establish your Open AI key to use GPT API.
 
 
 ## How to run
 
-1. Create venv with this directory
-2. Install the requirements from requirements.txt
+1. Make sure you have installed our modified CRAFT package (link is below)
+2. Create venv with this directory
 3. activate venv
-4. From terminal run flask app with flask run command.
-5. Upload any photo from sample data folder to the website. 
-6. wait and download the resulting Excel file
+4. Install the requirements from requirements.txt
+5. From terminal run flask app with 'flask run' command.
+6. Upload any photo from sample data folder to the website. 
+7. wait and download the resulting Excel file
 
 
 ## Methodology
