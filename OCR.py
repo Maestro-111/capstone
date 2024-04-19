@@ -37,9 +37,11 @@ def remove_contours_inside(contours):
 
 
 
+# CONFIGURE YOUR PATH TO Pyton
+
 def run_craft():
-    anaconda_python_path = r'C:/Python39/python.exe'
-    command = [anaconda_python_path, "C:/Custom-Craft/test.py", "--trained_model", "craft_mlt_25k.pth", "--test_folder", "test/"]
+    python_path = r'C:/Python39/python.exe'
+    command = [python_path, "C:/Custom-Craft/test.py", "--trained_model", "craft_mlt_25k.pth", "--test_folder", "test/"]
     subprocess.run(command)
 
 def text_extraction(text):

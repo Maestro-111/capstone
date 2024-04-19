@@ -52,13 +52,11 @@ def upload():
         test_folder = 'test'
         filename = os.path.join(base_path + "/" + app.config['UPLOAD_FOLDER'], filename)
 
-        print(filename)
 
         file.save(filename)
         images = os.listdir(app.config['UPLOAD_FOLDER'])
 
         for image in images:
-            print(image, filename_original)
             if image == filename_original:
                 shutil.copy(os.path.join(app.config['UPLOAD_FOLDER'], image), os.path.join(test_folder, image))
 
@@ -86,7 +84,6 @@ def upload():
             general_info = pd.DataFrame(extarcted_text)
             product_info = pd.DataFrame(product_text)
 
-            print(filename_original)
 
             general_info["Image Name"] = filename_original
 
@@ -109,30 +106,18 @@ def upload():
             with open('exports/number.txt', 'w') as file:
                 file.write(f'{number+1}')
 
-
-
             final_path = os.path.join(base_path, 'output.xlsx')
-
-            print(final_path)
 
             shutil.copy(output_path, final_path)
 
             return render_template('result_1_1.html', output_path=final_path, os=os)
 
         else:
-            print(filename_original)
             return render_template('result_2_2.html', image_filename=filename_original)
 
 
 if __name__ == '__main__':
-    try:
-        print("!")
-        app.run(debug=True)
-        print("\n!")
-    except Exception as e:
-        print("Exp")
-        exit(0)
-    finally:
-        print("!"+'TAGIL'*100)
+    app.run(debug=True)
+
 
 
