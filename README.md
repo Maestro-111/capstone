@@ -46,6 +46,10 @@ unit testing.py merges all the outputs into one table and compares it with datab
 - Limitations: Dependency on image quality. Also, the web app is not publicly available.
 
 
+- For Unit testing: Each time you run the program, it stores the output table for each receipt in exports folder.
+- Unit testing.py merges all outputs into one table and compares with database.xlsx. In order to refresh the exports folder you can run reset_exports.py
+
+
 ## TO DO
 
 1. Work on GPT prompt. Not accurate in identifying address.
