@@ -45,6 +45,7 @@ unit testing.py merges all the outputs into one table and compares it with datab
 - Evaluation Metrics: Accuracy via using unit testing.py.
 - Limitations: Dependency on image quality. Also, the web app is not publicly available.
 
+## Unit testing
 
 - For Unit testing: Each time you run the program, it stores the output table for each receipt in exports folder.
 - Unit testing.py merges all outputs into one table and compares with database.xlsx. In order to refresh the exports folder you can run reset_exports.py
